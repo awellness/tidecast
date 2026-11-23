@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>window.TIDECAST_API_URL = 'https://script.google.com/macros/s/AKfycbwvu63UgexElVpjCV0Lyi-mA1G-WmjNexRChrfOX_qFuDWgXz6YHm1Y2gXhDLoh-Rwa/exec';</script>
+<title>Tidecast Media</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="../jersey/icon-180.png">
+<link rel="icon" type="image/png" href="../jersey/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tidecast">
+<meta name="theme-color" content="#0B1F3A">
+<meta name="robots" content="noindex">
+<base target="_top">
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#1F7A52; --green-soft:#E3F2EA; --green-ink:#155E3E;
+    --blue:#1C6FA8; --blue-soft:#E6F0F8; --blue-ink:#14537E;
+    --amber-soft:#FDF6EC; --amber-line:#F2DFC2; --amber-ink:#8A4B0F;
+    --red:#A5281B; --red-line:#F0C9C4;
+    --ink:#0F1E2E; --muted:#4F5F6E; --line:#E3E9E5; --field:#D5DED8;
+    --bg:#F3F6F4; --card:#FFFFFF; --wash:#F8FAF9;
+  }
+  :root[data-theme=dark]{
+    color-scheme:dark;
+    --green:#2A9466; --green-soft:#16352A; --green-ink:#86DDB3;
+    --blue:#6CB4E8; --blue-soft:#14283A; --blue-ink:#A6D3F5;
+    --amber-soft:#2D2414; --amber-line:#5A4422; --amber-ink:#F2C27A;
+    --red:#F08A7E; --red-line:#5A2A25;
+    --ink:#E6EDEF; --muted:#9AABB5; --line:#24333C; --field:#34454F;
+    --bg:#0C1418; --card:#141F26; --wash:#1A2830;
+  }
+  [data-theme=dark] .icon-btn svg{stroke:var(--ink)}
+  [data-theme=dark] .add svg{stroke:var(--muted)}
+  [data-theme=dark] .filter[aria-pressed=true]{color:var(--bg)}
+  [data-theme=dark] .toast{color:var(--bg)}
+  [data-theme=dark] .slide{border-color:var(--line)}
+  [data-theme=dark] .slide input{background:var(--wash);color:var(--ink);border-color:var(--field)}
+  [data-theme=dark] .slide .cnt{color:var(--muted)}
+  [data-theme=dark] .thumb,[data-theme=dark] .lib .media{background:#22313A;color:var(--muted)}
+  [data-theme=dark] .title .tc{background:linear-gradient(90deg,#5FD39C,#4FB8C6);-webkit-background-clip:text;background-clip:text}
+  [data-theme=dark] nav button[aria-current=page]{color:#5FD39C}
+  #themeBtn .sun{display:none} [data-theme=dark] #themeBtn .sun{display:block} [data-theme=dark] #themeBtn .moon{display:none}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue)} a:hover{color:var(--blue-ink)}
+  button{font-family:inherit;cursor:pointer}
+  .app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:84px}
+  header{background:var(--card);border-bottom:1px solid var(--line);padding:18px 18px 14px;position:sticky;top:0;z-index:5}
+  .brand{display:flex;justify-content:space-between;align-items:center}
+  .brand-left{display:flex;align-items:center;gap:10px}
+  .logo{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(14,79,92,.25)}
+  .title .by{display:block;font-family:Inter,sans-serif;font-weight:500;font-size:11px;color:var(--muted);letter-spacing:.02em;margin-top:1px}
+  .title .md{font-weight:500;color:var(--ink)}
+  .title .tc{background:linear-gradient(90deg,#1F7A52,#0E4F5C);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hello{font-size:12px;color:var(--muted)}
+  .title{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-weight:800;font-size:19px;white-space:nowrap}
+  @media (max-width:430px){header .icon-btn{width:38px;height:38px;border-radius:11px} header .title{font-size:17px} header .logo{width:36px;height:36px} header .logo svg{width:36px;height:36px}}
+  .icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center}
+  main{padding:16px;display:flex;flex-direction:column;gap:14px}
+  .section-title{font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:22px;font-weight:800;margin:0}
+  .sub{font-size:13px;color:var(--muted);margin:2px 0 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px}
+  .chip.green{background:var(--green-soft);color:var(--green-ink)}
+  .chip.blue{background:var(--blue-soft);color:var(--blue-ink)}
+  .chip.amber{background:var(--amber-soft);color:var(--amber-ink)}
+  .date{font-size:12px;color:var(--muted)}
+  h2.hook{margin:0;font-family:'Plus Jakarta Sans',Inter,sans-serif;font-size:20px;line-height:1.3;font-weight:700}
+  .label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+  textarea,input[type=text],select{width:100%;border-radius:12px;border:1px solid var(--field);background:var(--wash);padding:12px;font:400 15px/1.5 Inter,sans-serif;color:var(--ink)}
+  textarea:focus,input:focus,select:focus{outline:2px solid var(--blue);outline-offset:1px}
+  textarea.spoken{min-height:170px;resize:vertical}
+  textarea.caption{min-height:120px;resize:vertical;font-size:14px}
+  .meta{font-size:12px;color:var(--muted)}
+  .checks{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:var(--wash)}
+  .check{display:flex;gap:8px;align-items:flex-start;font-size:13px;line-height:1.4}
+  details summary{font-size:14px;font-weight:600;color:var(--blue);cursor:pointer;padding:4px 0}
+  details .flags{white-space:pre-wrap;font-size:13px;line-height:1.5;color:var(--ink);margin-top:8px}
+  .btns{display:flex;gap:8px}
+  .btn{height:48px;border-radius:12px;font-weight:600;font-size:15px;border:1px solid var(--field);background:var(--card);color:var(--ink);flex:1}
+  .btn.primary{background:var(--green);border-color:var(--green);color:#fff;flex:2}
+  .btn.danger{border-color:var(--red-line);color:var(--red)}
+  .btn:disabled{opacity:.55;cursor:default}
+  .empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:15px;line-height:1.5}
+  .empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
+  .video-wrap{display:flex;gap:14px}
+  .slide{border:1px solid #E3E8EE;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+  .slide input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px 10px;border:1px solid #D5DCE3;border-radius:8px}
+  .slide .lab{text-transform:uppercase;font-size:13px;letter-spacing:.04em}
+  .slide .cnt{font-size:12px;color:#6B7785}
+  .slide .cnt.over{color:#B42318;font-weight:600}
+  .img-strip{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}
+  .img-strip img{height:260px;aspect-ratio:4/5;border-radius:12px;object-fit:cover;scroll-snap-align:start;flex-shrink:0;background:#1A2B3B}
+  video{width:160px;aspect-ratio:9/16;border-radius:14px;background:#1A2B3B;flex-shrink:0;object-fit:cover}
+  .info{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
+  dl{margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;font-size:12px}
+  dt{color:var(--muted)} dd{margin:0;font-weight:600}
+  .plan{display:flex;gap:8px;align-items:center;font-size:14px;font-weight:600}
+  .list-item{display:flex;flex-direction:column;gap:4px;padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:14px}
+  .list-item .when{font-weight:700;font-size:15px}
+  .list-item .what{font-size:14px}
+  /* form */
+  .types{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .type{height:66px;border-radius:12px;border:1px solid var(--field);background:var(--card);color:var(--ink);font-weight:500;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+  .type[aria-pressed=true]{border:2px solid var(--green);background:var(--green-soft);color:var(--green-ink);font-weight:600}
+  .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label,.field .lbl{font-size:13px;font-weight:600;color:var(--muted)}
+  select{height:46px;padding:0 10px;background:var(--card)}
+  .kw-box{min-height:46px;border-radius:12px;border:1px solid var(--field);background:var(--card);padding:6px 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .kw-box input{border:none;outline:none;padding:6px;flex:1;min-width:110px;background:transparent;font-size:15px}
+  .kw{font-size:12px;font-weight:600;padding:5px 6px 5px 10px;border-radius:999px;background:var(--blue-soft);color:var(--blue-ink);display:flex;align-items:center;gap:4px}
+  .kw button{border:none;background:none;color:var(--blue-ink);font-size:15px;line-height:1;padding:0 4px}
+  .uploads{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .thumb{height:70px;border-radius:10px;background:#DDE6E1;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#3E4F5E;text-align:center;padding:4px;overflow:hidden;position:relative;word-break:break-all}
+  .thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+  .thumb .x{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:999px;border:none;background:#0F1E2E;color:#fff;font-size:13px;line-height:1;z-index:2}
+  .add{height:70px;border-radius:10px;border:1.5px dashed #9FB2A7;background:var(--card);display:flex;align-items:center;justify-content:center}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4;padding:12px;border-radius:12px;background:var(--amber-soft);border:1px solid var(--amber-line)}
+  .consent input,.toggle input{width:20px;height:20px;accent-color:var(--green);margin:0;flex-shrink:0}
+  .toggle{display:flex;justify-content:space-between;align-items:center;font-size:15px;font-weight:600}
+  /* nav */
+  nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);z-index:10;padding-bottom:env(safe-area-inset-bottom)}
+  nav .inner{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));height:72px}
+  nav button{border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;font-weight:500;color:var(--muted);position:relative}
+  nav button[aria-current=page]{color:var(--green);font-weight:700}
+  .badge{position:absolute;top:10px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:999px;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px}
+  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:20;max-width:90%;box-shadow:0 6px 24px rgba(15,30,46,.25);display:none}
+  .loading{padding:60px 20px;text-align:center;color:var(--muted)}
+  .filters{display:flex;gap:6px;flex-wrap:wrap}
+  .filter{height:36px;padding:0 12px;border-radius:999px;border:1px solid var(--field);background:var(--card);font-size:13px;font-weight:600;color:var(--ink)}
+  .filter[aria-pressed=true]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .lib{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}
+  .lib .media{width:96px;aspect-ratio:9/16;border-radius:10px;background:#DDE6E1;object-fit:cover;flex-shrink:0}
+  .lib .fields{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+  .lib .fields select,.lib .fields input{height:40px;padding:0 10px;font-size:14px;border-radius:10px;background:var(--card)}
+  .lib .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .lib .head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13px;font-weight:700}
+  .lib .save{height:40px;border-radius:10px;border:none;background:var(--green);color:#fff;font-weight:600;font-size:14px}
+  .lib .save:disabled{opacity:.55}
+  .post{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}
+  .post .top{display:flex;gap:12px}
+  .post video,.post .thumb{width:110px;aspect-ratio:9/16;border-radius:10px;background:#1A2B3B;object-fit:cover;flex-shrink:0}
+  .post .thumb.img{aspect-ratio:4/5}
+  .post .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .post .hook{font-size:15px;font-weight:700;line-height:1.3;margin:0}
+  .post .acts{display:flex;gap:8px}
+  .post .acts .btn{height:40px;font-size:14px}
+  .post .vplay{border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+  .post .vplay span{width:44px;height:44px;border-radius:999px;background:rgba(255,255,255,.92);color:#0F1E2E;font-size:18px;display:flex;align-items:center;justify-content:center;padding-left:3px}
+  .post .strip{display:flex;gap:6px;overflow-x:auto}
+  .post .strip img{height:120px;aspect-ratio:4/5;border-radius:8px;object-fit:cover;flex-shrink:0}
+  .search{height:44px !important}
+  .film-prog{display:flex;flex-direction:column;gap:6px}
+  .film-prog .bar{height:10px;border-radius:999px;background:var(--wash);border:1px solid var(--line);overflow:hidden}
+  .film-prog .bar span{display:block;height:100%;width:0;background:var(--green);transition:width .2s}
+  .film-file{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:14px}
+  .help summary{font-weight:700;font-size:16px;cursor:pointer}
+  .help ul{margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.5}
+  .hidden{display:none !important}
+  .login{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px}
+  .login form{width:100%;max-width:380px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 22px;display:flex;flex-direction:column;gap:14px}
+  .login input{height:48px;border-radius:12px;border:1px solid var(--field);padding:0 14px;font:400 16px Inter,sans-serif;background:var(--card)}
+  .login .err{color:var(--red);font-size:14px;min-height:18px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="brand-left">
+        <div class="logo"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="tcg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22915F"/><stop offset="1" stop-color="#0E4F5C"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="url(#tcg1)"/><circle cx="29.5" cy="10.5" r="2.6" fill="#F4C95D"/><path d="M15.5 9.5 L26 16 L15.5 22.5 Z" fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 28.5c3.3-4 6.7-4 10 0s6.7 4 10 0 5-3.2 7-1.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M8.5 33.5c2.7-2.6 5.3-2.6 8 0s5.3 2.6 8 0" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div><div class="hello" id="hello">Hello, Al</div><div class="title"><span class="tc">Tidecast</span> <span class="md">Media</span></div></div>
+      </div>
+      <div style="display:flex;gap:6px">
+      <button class="icon-btn" id="themeBtn" aria-label="Switch dark mode">
+        <svg class="moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F1E2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F1E2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn" id="helpBtn" aria-label="How it works">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F1E2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="icon-btn" id="signout" aria-label="Sign out">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F1E2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
+      </button>
+      <button class="icon-btn" id="refresh" aria-label="Refresh">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F1E2E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+      </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="view-approve"></main>
+  <main id="view-videos" class="hidden"></main>
+  <main id="view-schedule" class="hidden"></main>
+  <main id="view-library" class="hidden"></main>
+  <main id="view-help" class="hidden">
+    <div><h1 class="section-title">How it works</h1><p class="sub">A quick guide to each part of the app.</p></div>
+    <details class="card help" open><summary>The weekly plan</summary>
+      <ul>
+        <li><strong>Mon and Thu:</strong> AI presenter video (carousels until presenter videos are back), posted to <span class="cl-video"></span>.</li>
+        <li><strong>Tue:</strong> image post (<span class="cl-image"></span>).</li>
+        <li><strong>Wed:</strong> voiceover story about regenerative or nutrient science from the Story Topics tab.</li>
+        <li><strong>Fri:</strong> Friday Fun: a joke, fun fact or light health tip.</li>
+        <li><strong>Sat and Sun:</strong> off. Post anything you like from New post.</li>
+        <li>Drafts arrive around <strong>7:15 AM</strong> by text. Approve by <strong>10 AM</strong>; it posts at <strong>12 PM</strong> on the next free day (one post per day).</li>
+      </ul></details>
+    <details class="card help"><summary>Approve</summary>
+      <ul>
+        <li>Each card is one draft. Read it, fix any wording, then tap <strong>Approve</strong> or <strong>Skip</strong>.</li>
+        <li><strong>Videos and voiceovers:</strong> edit the words in the box. Keep it under 130 words (about 45 seconds).</li>
+        <li><strong>Image posts and carousels:</strong> edit each slide. The counters turn red when a line is too long.</li>
+        <li><strong>Film It:</strong> tap Watch the original. Ums and long pauses are removed automatically. Each <strong>suggested cut</strong> is ticked; leave it ticked to cut it, untick to keep it.</li>
+        <li>Open <strong>Caption</strong> to edit the post text. Open <strong>Review notes</strong> for the sources and flags.</li>
+        <li><span class="cl-rule"></span></li>
+      </ul></details>
+    <details class="card help"><summary>Videos</summary>
+      <ul>
+        <li>Finished videos and images appear here to check before they post.</li>
+        <li><strong>Looks good</strong> marks it reviewed. <strong>Don't post</strong> stops it; if it's already scheduled, also delete it in GHL Social Planner.</li>
+        <li><strong>In production</strong> lists what is still being made. A voiceover or Film It video takes about 45 minutes.</li>
+        <li><span class="cl-ailabel"></span></li>
+      </ul></details>
+    <details class="card help"><summary>Posts</summary>
+      <ul>
+        <li>Your library of every finished video and image.</li>
+        <li><strong>Upcoming</strong> shows what is scheduled, <strong>Posted</strong> what has gone out, <strong>All</strong> everything.</li>
+        <li>Filter by videos or images and by service, or search the hook or caption.</li>
+        <li><strong>Open</strong> to watch, save or share. <strong>Copy caption</strong> to repost somewhere else.</li>
+        <li>"Temporary link" means it was never posted; download it if you want to keep it.</li>
+      </ul></details>
+    <details class="card help"><summary>Library (B-roll)</summary>
+      <ul>
+        <li>Your own photos and clips, from the GHL Media Library folder "B-Roll Library" (one subfolder per service).</li>
+        <li><strong>Add B-roll:</strong> pick the service, type a few keywords, choose clips or photos, and tap Upload. They are ready to use right away (patient items need the authorization box ticked).</li>
+        <li>Upload new files to that folder in GHL, then tap <strong>Sync</strong> here (it also syncs every morning).</li>
+        <li>New items need review: set <strong>Use in videos</strong>, <strong>People shown</strong> and <strong>Consent</strong>, add a short description of the body area, then Save.</li>
+        <li>Footage with no people can be approved in bulk. Any patient photos are reviewed one by one, and patients need a signed authorization.</li>
+      </ul></details>
+    <details class="card help"><summary>New post</summary>
+      <ul>
+        <li><strong>AI video:</strong> an AI presenter explains your topic.</li>
+        <li><strong>Voiceover:</strong> a narrated science story with animated visuals, great for regenerative and nutrient science.</li>
+        <li><strong>My video (Film It):</strong> upload your own recording; it gets trimmed, captioned and given B-roll.</li>
+        <li><strong>Image post</strong> or <strong>Carousel:</strong> one slide, or 3 to 5 swipeable slides (<span class="cl-image"></span>).</li>
+        <li>Pick the service and audience, add keywords (press Enter after each), and paste any article or post you liked.</li>
+        <li><strong>When to post:</strong> Next free day (12 PM), As soon as it's ready, or a set time. You get a text when the draft is ready to approve.</li>
+      </ul></details>
+    <details class="card help"><summary>Film It: recording tips</summary>
+      <ul>
+        <li>Hold the phone <strong>upright</strong>, at eye level, with the light in front of you.</li>
+        <li>Record at <strong>1080p, not 4K</strong>, and keep it to about 1 to 2 minutes. Upload on Wi-Fi and keep the screen open.</li>
+        <li>Don't worry about ums or restarts: if you flub a line, pause and say it again. The editor keeps the last good take.</li>
+        <li>Stick to how things work. Avoid promising results; the editor flags those lines as suggested cuts.</li>
+        <li>Only staff on camera, or patients who signed a HIPAA marketing authorization.</li>
+      </ul></details>
+    <details class="card help"><summary>If something goes wrong</summary>
+      <ul>
+        <li><strong>Nothing to approve:</strong> tap refresh (top right). Drafts arrive about 3 to 5 minutes after a request.</li>
+        <li><strong>A video is stuck in production:</strong> it usually finishes on the next 10 AM run.</li>
+        <li><strong>Signed out:</strong> sign in again with your email and password.</li>
+        <li>Everything is also in the Content Hub sheet, tab Content Drafts.</li>
+      </ul></details>
+  </main>
+  <main id="view-new" class="hidden">
+    <div><h1 class="section-title">New post</h1><p class="sub">Add your own idea to the queue.</p></div>
+    <form id="newForm" class="card" novalidate>
+      <div class="field">
+        <span class="lbl">What do you want?</span>
+        <div class="types" role="group" aria-label="Post type">
+          <button type="button" class="type" data-type="ai" aria-pressed="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/></svg>AI video</button>
+          <button type="button" class="type" data-type="voiceover" aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M19 11a7 7 0 0 1-14 0M12 18v3"/></svg>Voiceover</button>
+          <button type="button" class="type" data-type="mine" aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>My video</button>
+          <button type="button" class="type" data-type="image" aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>Image post</button>
+          <button type="button" class="type" data-type="carousel" aria-pressed="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M3 7v10M21 7v10"/></svg>Carousel</button>
+        </div>
+        <span class="meta" id="typeHint">An AI presenter video made from your keywords, text, or screenshots.</span>
+      </div>
+
+      <div class="grid2">
+        <div class="field">
+          <label for="service">Service</label>
+          <select id="service"></select>
+        </div>
+        <div class="field">
+          <label for="audience">Audience</label>
+          <select id="audience"><option>Anyone</option><option>Women</option><option>Men</option></select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="kwInput">Keywords</label>
+        <div class="kw-box" id="kwBox"><input id="kwInput" type="text" placeholder="Type and press Enter"></div>
+      </div>
+
+      <div class="field">
+        <label for="pasted">Paste an article, post or link</label>
+        <textarea id="pasted" style="min-height:90px;background:var(--card)" placeholder="Paste text or a link you liked…"></textarea>
+      </div>
+
+      <div class="field">
+        <span class="lbl">Uploads (up to 4)</span>
+        <div class="uploads" id="uploads"></div>
+        <input type="file" id="fileInput" accept="image/*,video/*" multiple class="hidden">
+        <span class="meta" id="uploadHint">Screenshots are read for text and never posted. Keep videos under about 40 MB.</span>
+        <div class="film-prog hidden" id="filmProg"><div class="bar"><span id="filmBar"></span></div><span class="meta" id="filmPct">Uploading…</span></div>
+      </div>
+
+      <label class="consent hidden" id="readingBox" style="background:var(--card)">
+        <input type="checkbox" id="reading">
+        <span>I was reading from a script or screen: use more B-roll to cover it.</span>
+      </label>
+
+      <label class="consent" id="consentBox">
+        <input type="checkbox" id="consent">
+        <span>People shown in my uploads have signed a HIPAA marketing authorization.</span>
+      </label>
+
+      <div class="field">
+        <label for="notes">Notes for the writer</label>
+        <textarea id="notes" style="min-height:70px;background:var(--card)" placeholder="Anything to include or avoid"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="postWhen">When to post</label>
+        <select id="postWhen">
+          <option value="next">Next free day (12 PM)</option>
+          <option value="asap">As soon as it's ready</option>
+          <option value="time">Pick a date and time</option>
+        </select>
+        <input type="datetime-local" id="postAt" class="hidden" style="height:46px;border-radius:12px;border:1px solid var(--field);padding:0 10px;font:400 15px Inter,sans-serif">
+        <span class="meta">The video starts as soon as you approve the draft.</span>
+      </div>
+
+      <button type="submit" class="btn primary" id="submitBtn" style="flex:none">Create draft</button>
+    </form>
+  </main>
+</div>
+
+<nav aria-label="Main">
+  <div class="inner">
+    <button data-view="approve" aria-current="page">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Approve<span class="badge hidden" id="badge-approve"></span></button>
+    <button data-view="videos">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+      Videos<span class="badge hidden" id="badge-videos"></span></button>
+    <button data-view="schedule">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Posts</button>
+    <button data-view="library">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Library<span class="badge hidden" id="badge-library"></span></button>
+    <button data-view="new">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+      New post</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="login hidden" id="login">
+  <form id="loginForm">
+    <div class="brand-left"><div class="logo"><svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="tcg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22915F"/><stop offset="1" stop-color="#0E4F5C"/></linearGradient></defs><rect width="40" height="40" rx="11" fill="url(#tcg2)"/><circle cx="29.5" cy="10.5" r="2.6" fill="#F4C95D"/><path d="M15.5 9.5 L26 16 L15.5 22.5 Z" fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M6.5 28.5c3.3-4 6.7-4 10 0s6.7 4 10 0 5-3.2 7-1.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M8.5 33.5c2.7-2.6 5.3-2.6 8 0s5.3 2.6 8 0" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/></svg></div><div class="title"><span class="tc">Tidecast</span> <span class="md">Media</span><span class="by" id="byLine"></span></div></div>
+    <h1 class="section-title" id="loginTitle" style="font-size:20px">Sign in</h1>
+    <p class="sub" id="loginSub" style="margin:0">Use your Tidecast Media login.</p>
+    <label class="field"><span class="lbl">Email</span><input type="email" id="loginEmail" name="username" autocomplete="username" required></label>
+    <label class="field"><span class="lbl">Password</span><input type="password" id="loginPass" name="password" autocomplete="current-password" required></label>
+    <div class="err" id="loginErr" role="alert"></div>
+    <button type="submit" class="btn primary" id="loginBtn" style="flex:none">Sign in</button>
+  </form>
+</div>
+
+<script>
+/* GitHub shim: when this page is opened from GitHub (not from Apps Script), google.script.run calls
+   are sent by POST to the Apps Script web app set in window.TIDECAST_API_URL. Inside Apps Script this does nothing. */
+(function(){
+  if (window.google && google.script && google.script.run) return;
+  var URL = window.TIDECAST_API_URL;
+  function runner(ok, fail){
+    return new Proxy({}, { get: function(_, name){
+      if (name === 'withSuccessHandler') return function(f){ return runner(f, fail); };
+      if (name === 'withFailureHandler') return function(f){ return runner(ok, f); };
+      if (name === 'withUserObject') return function(){ return runner(ok, fail); };
+      return function(){
+        var args = Array.prototype.slice.call(arguments);
+        if (!URL) { if (fail) fail(new Error('This page is missing its TIDECAST_API_URL setting.')); return; }
+        fetch(URL, { method: 'POST', body: JSON.stringify({ action: name, args: args }) })
+          .then(function(r){ return r.json(); })
+          .then(function(d){ if (d && d.ok) { if (ok) ok(d.result); } else if (fail) fail(new Error((d && d.error) || 'Something went wrong.')); })
+          .catch(function(){ if (fail) fail(new Error('No connection. Check your internet and try again.')); });
+      };
+    }});
+  }
+  window.google = { script: { run: runner(null, null) } };
+})();
+</script>
+<script>
+  /* ===== CLINIC SETTINGS: edit only this block for another clinic (also edit CLINIC SETTINGS in Code.gs) ===== */
+  var CLINIC = {
+    name: 'TriState Regenerative',
+    ownerName: 'Al',
+    storeKey: 'ts_',
+    services: ["Wharton's jelly (WJ)", 'Exosomes', 'Joint injections', 'IV therapy', 'Shockwave', 'Knee on Trac', 'Regenerative Science', 'Nutrient Science', 'General wellness'],
+    codes: ['WJ', 'EXO', 'JOINT', 'IV', 'SHOCK', 'KNEE'],
+    noBulk: [],
+    videoTargets: 'Facebook and LinkedIn',
+    imageTargets: 'Facebook and LinkedIn',
+    regulatedChip: 'Education only',
+    otherChip: 'Evidence mode',
+    regulatedWarn: 'Regenerative services are experimental and not FDA-approved; Shockwave and Knee on Trac are wellness devices with no FDA clearance. Explain what it is and how it works only: no treatment, pain relief, healing or results claims.',
+    rule: 'TriState regenerative services are experimental and not FDA-approved, and Shockwave and Knee on Trac are wellness devices with no FDA clearance: explain what it is and how it works only, never treatment, pain relief, healing or results.',
+    aiLabelNote: 'After an AI video posts, turn on the AI label where the platform offers one.',
+    brollPlaceholder: 'e.g. clinic room, IV setup, knee model',
+    descPlaceholder: 'e.g. knee, shoulder'
+  };
+  /* ===== end of CLINIC SETTINGS ===== */
+  (function(){
+    document.getElementById('byLine').textContent='by '+CLINIC.name;
+    document.getElementById('hello').textContent='Hello, '+CLINIC.ownerName;
+    document.getElementById('service').innerHTML=CLINIC.services.map(function(x){return '<option>'+x.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</option>';}).join('');
+    [['cl-video','videoTargets'],['cl-image','imageTargets'],['cl-rule','rule'],['cl-ailabel','aiLabelNote']].forEach(function(p){
+      document.querySelectorAll('.'+p[0]).forEach(function(el){el.textContent=CLINIC[p[1]];});
+    });
+  })();
+  (function(){
+    var t=null; try{t=localStorage.getItem(CLINIC.storeKey+'theme');}catch(e){}
+    if(!t) t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+    document.documentElement.setAttribute('data-theme',t);
+  })();
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',t);
+    try{localStorage.setItem(CLINIC.storeKey+'theme',t);}catch(e){}
+  });
+  var DATA = null;
+  var TOKEN = null;
+  try { TOKEN = localStorage.getItem(CLINIC.storeKey+'token'); } catch (e) {}
+  function saveToken(t){ TOKEN=t; try{ if(t) localStorage.setItem(CLINIC.storeKey+'token',t); else localStorage.removeItem(CLINIC.storeKey+'token'); }catch(e){} }
+  var API_FNS=['getAppData','approveDraft','skipDraft','videoOk','videoDontPost','createRequest','syncLibrary','getLibrary','updateLibraryItem','bulkApproveDevices','startFilmUpload','finishFilmUpload','startBrollUpload','finishBrollUpload'];
+  function api(){
+    var ok=function(){}, fail=function(e){toast(e.message);}, o={};
+    o.withSuccessHandler=function(f){ok=f;return o;};
+    o.withFailureHandler=function(f){fail=f;return o;};
+    API_FNS.forEach(function(n){
+      o[n]=function(){
+        var args=[TOKEN].concat(Array.prototype.slice.call(arguments));
+        var r=google.script.run.withSuccessHandler(ok).withFailureHandler(function(e){
+          if(String(e&&e.message).indexOf('AUTH')>=0){ saveToken(null); showLogin(); } else fail(e);
+        });
+        r[n].apply(r,args);
+      };
+    });
+    return o;
+  }
+  var CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1F7A52" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><path d="M20 6 9 17l-5-5"/></svg>';
+  var WARN = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A4B0F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>';
+
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function words(t){return (String(t).trim().match(/\S+/g)||[]).length;}
+  function secs(n){return Math.round(n/2.5);}
+
+  function toast(msg){
+    var t=document.getElementById('toast'); t.textContent=msg; t.style.display='block';
+    clearTimeout(toast._t); toast._t=setTimeout(function(){t.style.display='none';},3500);
+  }
+
+  function greet(){
+    var h=new Date().getHours();
+    document.getElementById('hello').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+', '+CLINIC.ownerName;
+  }
+
+  document.getElementById('helpBtn').addEventListener('click',function(){show('help');});
+  function show(view){
+    ['approve','videos','schedule','library','new','help'].forEach(function(v){
+      document.getElementById('view-'+v).classList.toggle('hidden', v!==view);
+    });
+    document.querySelectorAll('nav button').forEach(function(b){
+      if(b.dataset.view===view) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current');
+    });
+    window.scrollTo(0,0);
+    if(view==='library' && !LIB) loadLibrary();
+  }
+
+  function load(){
+    document.getElementById('view-approve').innerHTML='<div class="loading">Loading…</div>';
+    api().withSuccessHandler(function(d){DATA=d;render();})
+      .withFailureHandler(function(e){document.getElementById('view-approve').innerHTML='<div class="empty"><strong>Could not load</strong>'+esc(e.message)+'</div>';})
+      .getAppData();
+  }
+
+  function setBadge(id,n){var b=document.getElementById(id); b.textContent=n; b.classList.toggle('hidden',!n);}
+
+  function render(){
+    setBadge('badge-approve',DATA.drafts.length);
+    setBadge('badge-videos',DATA.videos.length);
+    renderApprove(); renderVideos(); renderSchedule();
+  }
+
+  /* ---------- Approve ---------- */
+  var SLIM={lab:18,head:70,sub:90};
+  function parseSlides(t){
+    return String(t||'').split('\n').map(function(l){return l.trim();}).filter(String).map(function(l){
+      var p=l.split('|').map(function(x){return x.trim();});while(p.length<3)p.push('');return [p[0],p[1],p.slice(2).join(' ')];
+    });
+  }
+  function slideField(i,k,key,val,ph){
+    var max=SLIM[key],n=val.length;
+    return '<input class="'+key+'" data-key="'+key+'" maxlength="'+(max+40)+'" value="'+esc(val)+'" placeholder="'+ph+'" aria-label="Slide '+(k+1)+' '+ph+'">'
+      +'<span class="cnt'+(n>max?' over':'')+'">'+n+' / '+max+'</span>';
+  }
+  function slideHtml(i,k,x){
+    return '<div class="slide"><span class="meta"><strong>Slide '+(k+1)+'</strong></span>'
+      +slideField(i,k,'lab',x[0],'Label')+slideField(i,k,'head',x[1],'Headline')+slideField(i,k,'sub',x[2],'Subheadline (optional)')+'</div>';
+  }
+  function readSlides(i){
+    var box=document.getElementById('sl'+i),out=[],err='';
+    box.querySelectorAll('.slide').forEach(function(sd,k){
+      var v={};sd.querySelectorAll('input').forEach(function(inp){v[inp.dataset.key]=inp.value.replace(/\|/g,'/').replace(/\s+/g,' ').trim();});
+      if(!v.head&&!err) err='Slide '+(k+1)+' needs a headline.';
+      ['lab','head','sub'].forEach(function(key){if(v[key].length>SLIM[key]&&!err) err='Slide '+(k+1)+' is too long. Shorten the red fields.';});
+      out.push(v.lab.toUpperCase()+' | '+v.head+' | '+v.sub);
+    });
+    return {text:out.join('\n'),count:out.length,err:err};
+  }
+  document.getElementById('view-approve').addEventListener('input',function(e){
+    var inp=e.target; if(!inp.dataset||!inp.dataset.key) return;
+    var c=inp.nextElementSibling,max=SLIM[inp.dataset.key],n=inp.value.length;
+    c.textContent=n+' / '+max; c.classList.toggle('over',n>max);
+  });
+
+  function renderApprove(){
+    var el=document.getElementById('view-approve');
+    var html='<div><h1 class="section-title">To approve</h1><p class="sub">Approve by 10:00 AM to make today\'s post.</p></div>';
+    if(!DATA.drafts.length){
+      html+='<div class="card empty"><strong>You\'re all caught up</strong>New drafts arrive around 7:15 AM on weekdays. We\'ll text you.</div>';
+      el.innerHTML=html; return;
+    }
+    DATA.drafts.forEach(function(d,i){
+      var n=words(d.spoken);
+      var chips='<span class="chip green">'+esc(d.service)+'</span>';
+      chips+= d.wellness?'<span class="chip blue">'+esc(CLINIC.regulatedChip)+'</span>':'<span class="chip blue">'+esc(CLINIC.otherChip)+'</span>';
+      if(d.audience && !/anyone/i.test(d.audience)) chips+='<span class="chip amber">'+esc(d.audience)+'</span>';
+      var checks='';
+      if(d.wellness) checks+='<div class="check">'+WARN+'<span>'+esc(CLINIC.regulatedWarn)+'</span></div>';
+      checks+= d.evidence?'<div class="check">'+CHECK+'<span>Facts checked against published studies</span></div>':'<div class="check">'+WARN+'<span>No studies attached. Read the facts carefully.</span></div>';
+      if(/explainer mode/i.test(d.flags)) checks+='<div class="check">'+WARN+'<span>Explainer mode: confirm every description is accurate</span></div>';
+      var links=(d.evidence.match(/https?:\/\/\S+/g)||[]).map(function(u,k){return '<a href="'+esc(u)+'" target="_blank" rel="noopener">Source '+(k+1)+'</a>';}).join(' · ');
+      if(d.isImage||d.isVoiceover) chips='<span class="chip amber">'+esc(d.format)+'</span>'+chips;
+      var body;
+      if(d.isFilm){
+        chips='<span class="chip amber">Film It</span>'+chips;
+        var f=d.film||{};
+        body='<div class="field"><span class="label">Your video</span>'
+          +(f.watchUrl?'<a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none;flex:none" href="'+esc(f.watchUrl)+'" target="_blank" rel="noopener">Watch the original</a>':'')
+          +'<span class="meta">'+esc(f.filmId||'')+(f.duration?' · '+esc(f.duration):'')+' · ums and long pauses are removed automatically · '+(f.removes||0)+' restart'+(f.removes===1?'':'s')+' removed · '+(f.broll||0)+' B-roll moment'+(f.broll===1?'':'s')+'</span></div>'
+          +'<div class="field"><span class="label">What stays in (before automatic cleanup)</span><div class="flags" style="white-space:pre-wrap">'+esc(d.spoken)+'</div></div>';
+        if(f.suggestions&&f.suggestions.length){
+          body+='<div class="field"><span class="label">Suggested cuts (ticked = cut it)</span>'
+            +f.suggestions.map(function(g,k){return '<label class="consent" style="background:var(--card)"><input type="checkbox" class="sugcut" data-range="'+esc(g.range)+'" checked><span><strong>"'+esc(g.words||g.range)+'"</strong>'+(g.reason?'<br><span class="meta">'+esc(g.reason)+'</span>':'')+'</span></label>';}).join('')
+            +'</div>';
+        }
+      } else if(d.isImage){
+        var sl=parseSlides(d.slides);
+        if(!sl.length) sl=[['','','']];
+        body='<div class="field"><span class="label">'+(/carousel/i.test(d.format)?'Slides (3 to 5)':(/holiday/i.test(d.format)?'Holiday greeting (LABEL | headline | subline)':'Image text'))+'</span><div id="sl'+i+'">'
+          +sl.map(function(x,k){return slideHtml(i,k,x);}).join('')+'</div>'
+          +(/carousel/i.test(d.format)?'<div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="addslide" data-i="'+i+'">Add slide</button><button class="btn" type="button" data-act="delslide" data-i="'+i+'">Remove last slide</button></div>':'')
+          +'</div>';
+      } else {
+        body='<div class="field"><label class="label" for="sp'+i+'">'+(d.isVoiceover?'What the narrator says':'What the presenter says')+'</label>'
+        +'<textarea class="spoken" id="sp'+i+'">'+esc(d.spoken)+'</textarea>'
+        +'<span class="meta" id="wc'+i+'">About '+secs(n)+' seconds · '+n+' words</span></div>';
+      }
+      html+='<article class="card" data-i="'+i+'">'
+        +'<div class="row"><div class="chips">'+chips+'</div><span class="date">'+esc(d.date)+'</span></div>'
+        +'<h2 class="hook">'+esc(d.hook||'(no hook)')+'</h2>'
+        +body
+        +(d.captionRow?'<details><summary>Caption</summary><textarea class="caption" id="cap'+i+'" aria-label="Caption" style="margin-top:8px">'+esc(d.caption)+'</textarea></details>':'<div class="check">'+WARN+'<span>No matching caption row found.</span></div>')
+        +'<div class="checks">'+checks
+        +'<details><summary>Review notes and sources</summary><div class="flags">'+esc(d.flags||'None')+'</div>'+(links?'<div style="margin-top:8px;font-size:13px">'+links+'</div>':'')+'</details></div>'
+        +'<div class="btns"><button class="btn primary" data-act="approve" data-i="'+i+'">Approve</button><button class="btn" data-act="skip" data-i="'+i+'">Skip</button></div>'
+        +'</article>';
+    });
+    el.innerHTML=html;
+    DATA.drafts.forEach(function(d,i){
+      var ta=document.getElementById('sp'+i);
+      if(!ta) return;
+      ta.addEventListener('input',function(){var n=words(ta.value);var w=document.getElementById('wc'+i);w.textContent='About '+secs(n)+' seconds · '+n+' words'+(n>130?' · too long for video (max 130)':'');});
+    });
+  }
+
+  document.getElementById('view-approve').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-act]'); if(!b) return;
+    var i=+b.dataset.i, d=DATA.drafts[i];
+    if(b.dataset.act==='addslide'||b.dataset.act==='delslide'){
+      var box=document.getElementById('sl'+i),cnt=box.querySelectorAll('.slide').length;
+      if(b.dataset.act==='addslide'){ if(cnt>=5){toast('5 slides at most.');return;} box.insertAdjacentHTML('beforeend',slideHtml(i,cnt,['','',''])); }
+      else { if(cnt<=3){toast('A carousel needs at least 3 slides.');return;} box.lastElementChild.remove(); }
+      return;
+    }
+    var card=b.closest('article'); card.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+    var undo=function(){card.querySelectorAll('button').forEach(function(x){x.disabled=false;});};
+    if(b.dataset.act==='approve'&&d.isFilm){
+      var cuts=[];card.querySelectorAll('.sugcut').forEach(function(c){if(c.checked)cuts.push(c.dataset.range);});
+      var capF=document.getElementById('cap'+i);
+      api().withSuccessHandler(function(res){toast(res&&res.produced?'Approved. Your video is being edited now.':'Approved. It will be edited at 10 AM.');load();})
+        .withFailureHandler(function(err){toast(err.message);undo();})
+        .approveDraft({row:d.row,id:d.id,captionRow:d.captionRow,captionId:d.captionId,cuts:cuts,caption:capF?capF.value.trim():d.caption});
+    } else if(b.dataset.act==='approve'&&d.isImage){
+      var r=readSlides(i), car=/carousel/i.test(d.format);
+      if(!r.err&&car&&(r.count<3||r.count>5)) r.err='A carousel needs 3 to 5 slides.';
+      if(r.err){toast(r.err);undo();return;}
+      var capI=document.getElementById('cap'+i);
+      api().withSuccessHandler(function(res){toast(res&&res.produced?'Approved. Your image is being made now.':'Approved. Images are made at 10 AM.');load();})
+        .withFailureHandler(function(err){toast(err.message);undo();})
+        .approveDraft({row:d.row,id:d.id,captionRow:d.captionRow,captionId:d.captionId,slides:r.text,caption:capI?capI.value.trim():d.caption});
+    } else if(b.dataset.act==='approve'){
+      var spoken=document.getElementById('sp'+i).value.trim();
+      if(words(spoken)>130){toast('Too long for video. Trim to 130 words or fewer.');card.querySelectorAll('button').forEach(function(x){x.disabled=false;});return;}
+      var cap=document.getElementById('cap'+i);
+      api().withSuccessHandler(function(r){toast(r&&r.produced?'Approved. Your video is being made now.':'Approved. The video starts at 10 AM.');load();})
+        .withFailureHandler(function(err){toast(err.message);card.querySelectorAll('button').forEach(function(x){x.disabled=false;});})
+        .approveDraft({row:d.row,id:d.id,captionRow:d.captionRow,captionId:d.captionId,spoken:spoken,caption:cap?cap.value.trim():d.caption});
+    } else {
+      api().withSuccessHandler(function(){toast('Skipped.');load();})
+        .withFailureHandler(function(err){toast(err.message);card.querySelectorAll('button').forEach(function(x){x.disabled=false;});})
+        .skipDraft({row:d.row,id:d.id,captionRow:d.captionRow,captionId:d.captionId});
+    }
+  });
+
+  /* Phones sometimes drop an image request inside the app frame: retry once with a fresh URL. */
+  window.imgRetry=function(img){
+    if(img.dataset.retried) return;
+    img.dataset.retried='1';
+    var u=img.getAttribute('src'); img.src=u+(u.indexOf('?')<0?'?':'&')+'r='+Date.now();
+  };
+
+  /* ---------- Videos ---------- */
+  function renderVideos(){
+    var el=document.getElementById('view-videos');
+    var html='<div><h1 class="section-title">Review videos and images</h1><p class="sub">Check before it posts.</p></div>';
+    if(!DATA.videos.length) html+='<div class="card empty"><strong>No new videos</strong>Finished videos show up here around 10:25 AM.</div>';
+    DATA.videos.forEach(function(v,i){
+      var plan=v.scheduledFor?('Posts '+esc(v.scheduledFor)):(v.postStatus?esc(v.postStatus):'Will be scheduled by the next run');
+      if(v.isImage){
+        html+='<article class="card">'
+          +'<div class="row"><div class="chips"><span class="chip amber">'+esc(v.format)+'</span><span class="chip green">'+esc(v.service)+'</span></div></div>'
+          +'<h2 class="hook" style="font-size:17px">'+esc(v.hook)+'</h2>'
+          +'<div class="img-strip">'+v.images.map(function(u,k){return '<a href="'+esc(u)+'" target="_blank" rel="noopener"><img src="'+esc(u)+'" alt="Slide '+(k+1)+'" loading="eager" decoding="async" onerror="imgRetry(this)"></a>';}).join('')+'</div>'
+          +(v.images.length>1?'<p class="meta" style="margin:0">Swipe to see all '+v.images.length+' slides.</p>':'')
+          +'<dl><div><dt>Theme</dt><dd>'+esc(v.theme||'—')+'</dd></div><div><dt>Posts to</dt><dd>'+esc(CLINIC.imageTargets)+'</dd></div></dl>'
+          +'<div class="plan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C6FA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'+plan+'</div>'
+          +'<div class="btns"><button class="btn primary" data-act="ok" data-i="'+i+'">Looks good</button><button class="btn danger" data-act="no" data-i="'+i+'">Don\'t post</button></div>'
+          +'</article>';
+        return;
+      }
+      html+='<article class="card">'
+        +'<div class="video-wrap"><video controls playsinline preload="metadata" src="'+esc(v.url)+'"></video>'
+        +'<div class="info"><span class="chip green" style="align-self:flex-start">'+esc(v.service)+'</span>'
+        +'<h2 class="hook" style="font-size:17px">'+esc(v.hook)+'</h2>'
+        +'<dl><div><dt>Presenter</dt><dd>'+esc(v.presenter)+'</dd></div><div><dt>Music</dt><dd>'+esc(v.music||'—')+'</dd></div></dl></div></div>'
+        +'<div class="plan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1C6FA8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'+plan+'</div>'
+        +(/film it/i.test(v.presenter)?'':'<p class="meta" style="margin:0">'+esc(CLINIC.aiLabelNote)+'</p>')
+        +'<div class="btns"><button class="btn primary" data-act="ok" data-i="'+i+'">Looks good</button><button class="btn danger" data-act="no" data-i="'+i+'">Don\'t post</button></div>'
+        +'</article>';
+    });
+    if(DATA.inProduction.length){
+      html+='<h2 class="section-title" style="font-size:17px;margin-top:6px">In production</h2>';
+      DATA.inProduction.forEach(function(p){
+        html+='<div class="list-item"><span class="what">'+esc(p.hook||p.id)+'</span><span class="meta">'+esc(p.mediaStatus)+'</span></div>';
+      });
+    }
+    el.innerHTML=html;
+  }
+
+  document.getElementById('view-videos').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-act]'); if(!b) return;
+    var v=DATA.videos[+b.dataset.i];
+    var card=b.closest('article'); card.querySelectorAll('button').forEach(function(x){x.disabled=true;});
+    var fail=function(err){toast(err.message);card.querySelectorAll('button').forEach(function(x){x.disabled=false;});};
+    if(b.dataset.act==='ok'){
+      api().withSuccessHandler(function(){toast('Marked as reviewed.');load();}).withFailureHandler(fail).videoOk({row:v.row,id:v.id});
+    } else {
+      if(!confirm(v.isImage?'Stop this post from going out?':'Stop this video from posting?')){card.querySelectorAll('button').forEach(function(x){x.disabled=false;});return;}
+      api().withSuccessHandler(function(r){
+        toast(r.stillScheduled?'Noted. It\'s already scheduled, so delete it in GHL Social Planner too.':'It won\'t be posted.');load();
+      }).withFailureHandler(fail).videoDontPost({row:v.row,id:v.id});
+    }
+  });
+
+  /* ---------- Posts (library of finished posts) ---------- */
+  var postTab='upcoming', postKind='all', postService='All', postQuery='';
+  function whenMs(p){var t=Date.parse(p.when);return isNaN(t)?null:t;}
+  function postState(p){
+    if(/do not post/i.test(p.postStatus)) return 'notposted';
+    if(/failed/i.test(p.postStatus)) return 'failed';
+    if(/scheduled/i.test(p.postStatus)){var t=whenMs(p);return (t!==null&&t<Date.now())?'posted':'upcoming';}
+    return 'ready';
+  }
+  var STATE_LABEL={upcoming:'Scheduled',posted:'Posted',ready:'Not scheduled yet',notposted:"Don't post",failed:'Failed'};
+  function renderSchedule(){
+    var el=document.getElementById('view-schedule');
+    var all=(DATA.posts||[]).map(function(p,i){p._i=i;p._state=postState(p);return p;});
+    var services=['All'].concat(all.map(function(p){return p.service;}).filter(function(v,i,a){return v&&a.indexOf(v)===i;}));
+    var list=all.filter(function(p){
+      if(postTab==='upcoming'&&p._state!=='upcoming') return false;
+      if(postTab==='posted'&&p._state!=='posted') return false;
+      if(postKind==='video'&&p.isImage) return false;
+      if(postKind==='image'&&!p.isImage) return false;
+      if(postService!=='All'&&p.service!==postService) return false;
+      if(postQuery){var q=postQuery.toLowerCase();if((p.hook+' '+p.caption+' '+p.id).toLowerCase().indexOf(q)<0) return false;}
+      return true;
+    });
+    if(postTab==='upcoming') list.sort(function(a,b){return (whenMs(a)||0)-(whenMs(b)||0);});
+    var count=function(t){return all.filter(function(p){return t==='all'||p._state===t;}).length;};
+    var html='<div><h1 class="section-title">Posts</h1><p class="sub">Every finished video and image, in one place.</p></div>'
+      +'<div class="filters">'+[['upcoming','Upcoming'],['posted','Posted'],['all','All']].map(function(t){return '<button class="filter" data-tab="'+t[0]+'" aria-pressed="'+(postTab===t[0])+'">'+t[1]+' ('+count(t[0])+')</button>';}).join('')+'</div>'
+      +'<div class="filters">'+[['all','All formats'],['video','Videos'],['image','Images']].map(function(t){return '<button class="filter" data-kind="'+t[0]+'" aria-pressed="'+(postKind===t[0])+'">'+t[1]+'</button>';}).join('')+'</div>'
+      +'<div class="grid2"><select id="postService" aria-label="Service">'+opt(services,postService)+'</select>'
+      +'<input type="text" id="postSearch" class="search" placeholder="Search hook or caption" value="'+esc(postQuery)+'"></div>';
+    if(!list.length){
+      html+='<div class="card empty"><strong>Nothing here</strong>'+(postTab==='upcoming'?'No posts are scheduled right now.':'No posts match these filters.')+'</div>';
+    }
+    list.slice(0,40).forEach(function(p){
+      var media;
+      if(p.isImage){
+        media=p.media.length>1
+          ?'<div class="strip">'+p.media.map(function(u,k){return '<a href="'+esc(u)+'" target="_blank" rel="noopener"><img src="'+esc(u)+'" alt="Slide '+(k+1)+'" loading="eager" decoding="async" onerror="imgRetry(this)"></a>';}).join('')+'</div>'
+          :'<a href="'+esc(p.media[0]||'')+'" target="_blank" rel="noopener"><img class="thumb img" src="'+esc(p.media[0]||'')+'" alt="" loading="eager" decoding="async" onerror="imgRetry(this)"></a>';
+      } else {
+        media='<button type="button" class="thumb vplay" data-src="'+esc(p.media[0]||'')+'" aria-label="Play video"><span>&#9658;</span></button>';
+      }
+      var chips='<span class="chip amber">'+esc(p.format)+'</span><span class="chip green">'+esc(p.service)+'</span>';
+      var status=STATE_LABEL[p._state]+((p._state==='upcoming'||p._state==='posted')&&p.when?' · '+esc(p.when):'');
+      var info='<div class="info"><div class="chips">'+chips+'</div><p class="hook">'+esc(p.hook||p.id)+'</p>'
+        +'<span class="meta">'+status+'</span>'
+        +(p.detail?'<span class="meta">'+esc(p.detail)+'</span>':'')
+        +'<span class="meta">'+esc(p.id)+' · made '+esc(p.date)+'</span>'
+        +(p.permanent?'':'<span class="meta" style="color:var(--amber-ink)">Temporary link: may stop working if never posted</span>')+'</div>';
+      html+='<article class="post">'
+        +(p.isImage&&p.media.length>1?info+media:'<div class="top">'+media+info+'</div>')
+        +'<div class="acts"><a class="btn" style="display:flex;align-items:center;justify-content:center;text-decoration:none" href="'+esc(p.media[0]||'')+'" target="_blank" rel="noopener">'+(p.isImage?'Open image':'Open video')+'</a>'
+        +'<button class="btn" data-copy="'+p._i+'"'+(p.caption?'':' disabled')+'>Copy caption</button></div>'
+        +'</article>';
+    });
+    if(list.length>40) html+='<p class="meta" style="text-align:center">Showing 40 of '+list.length+'. Use the filters or search to narrow it down.</p>';
+    el.innerHTML=html;
+  }
+  function copyText(t){
+    function fallback(){
+      var ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.top='-1000px';
+      document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);
+      var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+      document.body.removeChild(ta);toast(ok?'Caption copied.':'Could not copy. Long-press the caption in the sheet instead.');
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Caption copied.');},fallback);}
+    else fallback();
+  }
+  /* Posts: one video plays at a time (iPhones show a black picture when many players are loaded at once). */
+  function stopOtherVideos(){
+    document.querySelectorAll('#view-schedule video[data-src]').forEach(function(v){
+      v.pause();
+      var b=document.createElement('button');b.type='button';b.className='thumb vplay';b.dataset.src=v.dataset.src;
+      b.setAttribute('aria-label','Play video');b.innerHTML='<span>&#9658;</span>';
+      v.replaceWith(b);
+    });
+  }
+  document.getElementById('view-schedule').addEventListener('click',function(e){
+    var vp=e.target.closest('.vplay');
+    if(vp){
+      stopOtherVideos();
+      var v=document.createElement('video');
+      v.src=vp.dataset.src; v.dataset.src=vp.dataset.src; v.controls=true; v.playsInline=true; v.autoplay=true;
+      v.setAttribute('playsinline','');
+      vp.replaceWith(v); var pr=v.play(); if(pr&&pr.catch) pr.catch(function(){});
+      return;
+    }
+    var b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.tab){postTab=b.dataset.tab;renderSchedule();return;}
+    if(b.dataset.kind){postKind=b.dataset.kind;renderSchedule();return;}
+    if(b.dataset.copy!==undefined){copyText(DATA.posts[+b.dataset.copy].caption);}
+  });
+  document.getElementById('view-schedule').addEventListener('change',function(e){
+    if(e.target.id==='postService'){postService=e.target.value;renderSchedule();}
+  });
+  var searchTimer;
+  document.getElementById('view-schedule').addEventListener('input',function(e){
+    if(e.target.id!=='postSearch') return;
+    clearTimeout(searchTimer);
+    searchTimer=setTimeout(function(){
+      postQuery=e.target.value.trim();renderSchedule();
+      var s=document.getElementById('postSearch');s.focus();s.setSelectionRange(s.value.length,s.value.length);
+    },350);
+  });
+
+  /* ---------- New post ---------- */
+  var postType='ai', keywords=[], files=[], filmFile=null;
+  var HINTS={ai:'An AI presenter video made from your keywords, text, or screenshots.',voiceover:'A narrated science story over animated visuals, with no presenter on screen. Great for regenerative and nutrient science.',mine:'Film It: upload your own video (up to 600 MB). It is transcribed now; the AI editor that trims it and adds B-roll comes next.',image:'One image with short text, made from your keywords or text. Posts to '+CLINIC.imageTargets+'.',carousel:'3 to 5 swipeable slides, made from your keywords or text. Posts to '+CLINIC.imageTargets+'.'};
+
+  document.querySelectorAll('.type').forEach(function(b){
+    b.addEventListener('click',function(){
+      postType=b.dataset.type;
+      document.querySelectorAll('.type').forEach(function(x){x.setAttribute('aria-pressed', x===b?'true':'false');});
+      document.getElementById('typeHint').textContent=HINTS[postType];
+      var mine=postType==='mine';
+      if(mine){files=[];}else{filmFile=null;}
+      document.getElementById('fileInput').setAttribute('accept',mine?'video/*':'image/*,video/*');
+      if(mine) document.getElementById('fileInput').removeAttribute('multiple'); else document.getElementById('fileInput').setAttribute('multiple','');
+      document.getElementById('readingBox').classList.toggle('hidden',!mine);
+      document.getElementById('uploadHint').textContent=mine?'One video, up to 600 MB. Record at 1080p, not 4K. Use Wi-Fi for big files.':'Screenshots are read for text and never posted. Keep videos under about 40 MB.';
+      document.querySelector('#consentBox span').textContent=mine?'Everyone in this video is staff, or has signed a HIPAA marketing authorization.':'People shown in my uploads have signed a HIPAA marketing authorization.';
+      renderUploads();
+    });
+  });
+
+  function renderKw(){
+    var box=document.getElementById('kwBox'), input=document.getElementById('kwInput');
+    box.querySelectorAll('.kw').forEach(function(k){k.remove();});
+    keywords.forEach(function(k,i){
+      var s=document.createElement('span'); s.className='kw'; s.textContent=k;
+      var x=document.createElement('button'); x.type='button'; x.setAttribute('aria-label','Remove '+k); x.textContent='×';
+      x.onclick=function(){keywords.splice(i,1);renderKw();};
+      s.appendChild(x); box.insertBefore(s,input);
+    });
+  }
+  document.getElementById('kwInput').addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===','){e.preventDefault();var v=this.value.trim().replace(/,$/,'');if(v&&keywords.indexOf(v)<0){keywords.push(v);renderKw();}this.value='';}
+  });
+
+  function renderUploads(){
+    var box=document.getElementById('uploads'); box.innerHTML='';
+    if(postType==='mine'){
+      if(filmFile){
+        var row=document.createElement('div');row.className='film-file';
+        row.innerHTML='<span>'+esc(filmFile.name)+' · '+(Math.round(filmFile.size/1048576*10)/10)+' MB</span>';
+        var rx=document.createElement('button');rx.type='button';rx.className='btn';rx.style.cssText='flex:none;height:36px;padding:0 12px';rx.textContent='Remove';
+        rx.onclick=function(){filmFile=null;renderUploads();};row.appendChild(rx);box.appendChild(row);
+      } else {
+        var pick=document.createElement('button');pick.type='button';pick.className='btn';pick.style.cssText='flex:none;width:100%';pick.textContent='Choose video';
+        pick.onclick=function(){document.getElementById('fileInput').click();};box.appendChild(pick);
+      }
+      return;
+    }
+    files.forEach(function(f,i){
+      var d=document.createElement('div'); d.className='thumb';
+      if(/^image\//.test(f.mimeType)){var img=document.createElement('img');img.alt='';img.src='data:'+f.mimeType+';base64,'+f.data;d.appendChild(img);}
+      else {d.textContent=f.name;}
+      var x=document.createElement('button'); x.type='button'; x.className='x'; x.textContent='×'; x.setAttribute('aria-label','Remove '+f.name);
+      x.onclick=function(){files.splice(i,1);renderUploads();};
+      d.appendChild(x); box.appendChild(d);
+    });
+    if(files.length<4){
+      var a=document.createElement('button'); a.type='button'; a.className='add'; a.setAttribute('aria-label','Add upload');
+      a.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3E4F5E" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>';
+      a.onclick=function(){document.getElementById('fileInput').click();};
+      box.appendChild(a);
+    }
+  }
+  document.getElementById('fileInput').addEventListener('change',function(){
+    if(postType==='mine'){
+      var f=this.files[0]; this.value='';
+      if(!f) return;
+      if(!/^video\//.test(f.type||'')){toast('Please pick a video.');return;}
+      if(f.size>600*1024*1024){toast('That video is over 600 MB. Record at 1080p or trim it.');return;}
+      filmFile=f; renderUploads(); return;
+    }
+    var picked=Array.prototype.slice.call(this.files,0,4-files.length); this.value='';
+    picked.forEach(function(file){
+      if(file.size>40*1024*1024){toast(file.name+' is over 40 MB. Trim it first.');return;}
+      var r=new FileReader();
+      r.onload=function(){files.push({name:file.name,mimeType:file.type||'application/octet-stream',data:String(r.result).split(',')[1]});renderUploads();};
+      r.readAsDataURL(file);
+    });
+  });
+
+  var filmBusy=false;
+  window.addEventListener('beforeunload',function(e){if(filmBusy){e.preventDefault();e.returnValue='';}});
+  function filmSubmit(btn){
+    if(!filmFile){toast('Choose your video first.');return;}
+    if(!document.getElementById('consent').checked){toast('Please tick the box about people in the video.');return;}
+    var prog=document.getElementById('filmProg'),bar=document.getElementById('filmBar'),pct=document.getElementById('filmPct');
+    var reset=function(msg){filmBusy=false;btn.disabled=false;btn.textContent='Create draft';if(msg){toast(msg);pct.textContent=msg;}};
+    filmBusy=true;btn.disabled=true;btn.textContent='Uploading…';prog.classList.remove('hidden');bar.style.width='0';pct.textContent='Starting upload…';
+    var form={
+      service:document.getElementById('service').value,
+      audience:document.getElementById('audience').value,
+      keywords:keywords.join(', '),
+      notes:document.getElementById('notes').value.trim(),
+      consent:true,
+      reading:document.getElementById('reading').checked,
+      postWhen:document.getElementById('postWhen').value,
+      postAt:document.getElementById('postAt').value
+    };
+    api().withSuccessHandler(function(s){
+      var xhr=new XMLHttpRequest();
+      xhr.open('PUT',s.uploadUrl,true);
+      xhr.setRequestHeader('Content-Type',filmFile.type||'video/mp4');
+      xhr.upload.onprogress=function(e){if(e.lengthComputable){var p=Math.round(e.loaded/e.total*100);bar.style.width=p+'%';pct.textContent='Uploading… '+p+'% · keep this screen open';}};
+      xhr.onerror=function(){reset('The upload was blocked or the connection dropped. Try again on Wi-Fi.');};
+      xhr.onload=function(){
+        if(xhr.status!==200&&xhr.status!==201){reset('Upload failed ('+xhr.status+'). Try again.');return;}
+        var id=null;try{id=JSON.parse(xhr.responseText).id;}catch(err){}
+        if(!id){reset('Upload finished, but Drive did not return the file. Try again.');return;}
+        bar.style.width='100%';pct.textContent='Uploaded. Transcribing… (about a minute)';btn.textContent='Transcribing…';
+        form.filmId=s.filmId;form.fileId=id;
+        api().withSuccessHandler(function(r){
+          filmBusy=false;btn.disabled=false;btn.textContent='Create draft';
+          pct.textContent=r.filmId+': '+r.status+(r.duration?' · '+r.duration:'')+(r.wordCount?' · '+r.wordCount+' words':'');
+          toast(/^Transcribed/.test(r.status)?(r.editStarted?'Video saved. The AI editor is on it. We\'ll text you.':'Video saved and transcribed.'):r.status);
+          filmFile=null;keywords=[];renderKw();renderUploads();
+          document.getElementById('notes').value='';document.getElementById('consent').checked=false;document.getElementById('reading').checked=false;
+        }).withFailureHandler(function(err){reset(err.message);}).finishFilmUpload(form);
+      };
+      xhr.send(filmFile);
+    }).withFailureHandler(function(err){reset(err.message);})
+      .startFilmUpload({name:filmFile.name,mimeType:filmFile.type||'video/mp4',size:filmFile.size,origin:window.location.origin});
+  }
+
+  document.getElementById('newForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var pending=document.getElementById('kwInput').value.trim(); if(pending){keywords.push(pending);document.getElementById('kwInput').value='';renderKw();}
+    var btn=document.getElementById('submitBtn');
+    if(postType==='mine'){ filmSubmit(btn); return; }
+    btn.disabled=true; btn.textContent='Saving…';
+    api().withSuccessHandler(function(r){
+      btn.disabled=false; btn.textContent='Create draft';
+      toast(r.sent?'Got it! Your draft is being written. We\'ll text you.':(r.webhookSet?'Saved, but GHL did not respond. Check the Requests tab.':'Saved to the Requests tab.'));
+      keywords=[];files=[];renderKw();renderUploads();
+      ['pasted','notes'].forEach(function(id){document.getElementById(id).value='';});
+      document.getElementById('consent').checked=false;
+    }).withFailureHandler(function(err){btn.disabled=false;btn.textContent='Create draft';toast(err.message);})
+      .createRequest({
+        type:postType,
+        service:document.getElementById('service').value,
+        audience:document.getElementById('audience').value,
+        keywords:keywords.join(', '),
+        pasted:document.getElementById('pasted').value.trim(),
+        notes:document.getElementById('notes').value.trim(),
+        consent:document.getElementById('consent').checked,
+        postWhen:document.getElementById('postWhen').value,
+        postAt:document.getElementById('postAt').value,
+        files:files
+      });
+  });
+
+  /* ---------- Library ---------- */
+  var LIB=null, libService='ALL', libOnlyReview=true;
+  var CODES=['ALL'].concat(CLINIC.codes);
+  function noBulk(c){return CLINIC.noBulk.indexOf(c)>=0;}
+  function opt(list,val){return list.map(function(o){return '<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>';}).join('');}
+
+  function loadLibrary(){
+    document.getElementById('view-library').innerHTML='<div class="loading">Loading library…</div>';
+    api().withSuccessHandler(function(rows){LIB=rows;renderLibrary();})
+      .withFailureHandler(function(e){document.getElementById('view-library').innerHTML='<div class="empty"><strong>Could not load</strong>'+esc(e.message)+'</div>';})
+      .getLibrary();
+  }
+
+  function renderLibrary(){
+    var el=document.getElementById('view-library');
+    var review=LIB.filter(function(r){return /needs review/i.test(r.active);}).length;
+    setBadge('badge-library',review);
+    var html='<div class="row"><div><h1 class="section-title">B-roll library</h1><p class="sub">'+LIB.length+' items · '+review+' need review</p></div>'
+      +'<button class="btn" id="syncBtn" style="flex:none;height:44px;padding:0 14px">Sync</button></div>'
+      +'<div class="filters">'+CODES.map(function(c){return '<button class="filter" data-code="'+c+'" aria-pressed="'+(c===libService)+'">'+(c==='ALL'?'All':c)+'</button>';}).join('')+'</div>'
+      +'<div class="filters"><button class="filter" id="reviewToggle" aria-pressed="'+libOnlyReview+'">Needs review only</button></div>'
+      +brollForm();
+    var pendingDevices=LIB.filter(function(r){return !noBulk(r.service)&&(libService==='ALL'||r.service===libService)&&/needs review/i.test(r.active);}).length;
+    if(!noBulk(libService)&&pendingDevices){
+      html+='<button class="btn primary" id="bulkBtn" style="flex:none;height:46px">Mark '+pendingDevices+' '+(libService==='ALL'?'items'+(CLINIC.noBulk.length?' (all but '+CLINIC.noBulk.join(', ')+')':''):libService+' items')+' as: Use, no people</button>';
+    }
+    if(noBulk(libService)) html+='<p class="meta" style="margin:0">'+esc(libService)+' may have patient photos, so review these one by one.</p>';
+    var list=LIB.filter(function(r){return (libService==='ALL'||r.service===libService)&&(!libOnlyReview||/needs review/i.test(r.active));});
+    if(!LIB.length) html+='<div class="card empty"><strong>Library is empty</strong>Tap Sync to pull your photos and clips from GHL.</div>';
+    else if(!list.length) html+='<div class="card empty"><strong>Nothing here</strong>'+(libOnlyReview?'Everything in this group is reviewed.':'No items for this service.')+'</div>';
+    list.slice(0,60).forEach(function(r){
+      var i=LIB.indexOf(r);
+      var media=r.type==='Video'
+        ?'<video class="media" src="'+esc(r.url)+'#t=0.5" preload="metadata" muted playsinline controls></video>'
+        :'<img class="media" src="'+esc(r.url)+'" alt="'+esc(r.description||r.clipId)+'" loading="eager" decoding="async" onerror="imgRetry(this)">';
+      html+='<div class="lib" data-i="'+i+'">'+media+'<div class="fields">'
+        +'<div class="head"><span>'+esc(r.clipId)+'</span><span class="chip green">'+esc(r.type)+'</span></div>'
+        +'<label class="meta" for="ac'+i+'">Use in videos?</label><select id="ac'+i+'">'+opt(['Needs review','Yes','No'],r.active)+'</select>'
+        +'<div class="two"><div><label class="meta" for="pe'+i+'">People shown</label><select id="pe'+i+'">'+opt(['','None','Staff hands','Staff','Patient'],r.people)+'</select></div>'
+        +'<div><label class="meta" for="co'+i+'">Consent</label><select id="co'+i+'">'+opt(['','Yes','No','N/A'],r.consent)+'</select></div></div>'
+        +'<label class="meta" for="de'+i+'">Description (body area)</label><input type="text" id="de'+i+'" value="'+esc(r.description)+'" placeholder="'+esc(CLINIC.descPlaceholder)+'">'
+        +'<button class="save" data-i="'+i+'">Save</button></div></div>';
+    });
+    if(list.length>60) html+='<p class="meta" style="text-align:center">Showing 60 of '+list.length+'. Save some to see more.</p>';
+    el.innerHTML=html;
+  }
+
+  /* B-roll upload: phone -> Drive -> B-Roll Library, ready to use */
+  var brFiles=[], brBusy=false;
+  function brollForm(){
+    var codes=CODES.slice(1);
+    return '<div class="card" id="brCard" style="display:flex;flex-direction:column;gap:10px">'
+      +'<strong>Add B-roll</strong><p class="meta" style="margin:0">5 to 10 second clips or photos from the clinic. They go straight into the library, ready for videos.</p>'
+      +'<div class="two" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">'
+      +'<div><label class="meta" for="brService">Service</label><select id="brService"><option value="">Choose…</option>'+codes.map(function(c){return '<option'+(c===libService?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'
+      +'<div><label class="meta" for="brPeople">People shown</label><select id="brPeople">'+opt(['None','Staff hands','Staff','Patient'],'None')+'</select></div></div>'
+      +'<label class="meta" for="brKw">Keywords (what it shows)</label><input type="text" id="brKw" placeholder="'+esc(CLINIC.brollPlaceholder)+'">'
+      +'<label class="meta hidden" id="brConsentRow" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="brConsent" style="width:auto;height:auto;margin-top:3px"> This patient signed a HIPAA marketing authorization that covers social media.</label>'
+      +'<input type="file" id="brFile" accept="video/*,image/jpeg,image/png,image/webp" multiple>'
+      +'<div class="film-prog hidden" id="brProg"><div class="bar"><span id="brBar"></span></div><p class="meta" id="brPct"></p></div>'
+      +'<button class="btn primary" id="brBtn" style="height:46px">Upload to library</button></div>';
+  }
+  window.addEventListener('beforeunload',function(e){if(brBusy){e.preventDefault();e.returnValue='';}});
+  document.getElementById('view-library').addEventListener('change',function(e){
+    if(e.target.id==='brPeople') document.getElementById('brConsentRow').classList.toggle('hidden',e.target.value!=='Patient');
+    if(e.target.id==='brFile') brFiles=[].slice.call(e.target.files||[]);
+  });
+  function brollUpload(btn){
+    var service=document.getElementById('brService').value, people=document.getElementById('brPeople').value;
+    var kw=document.getElementById('brKw').value.trim(), consent=document.getElementById('brConsent').checked;
+    if(!service){toast('Pick a service.');return;}
+    if(!kw){toast('Add a few keywords about what it shows.');return;}
+    if(!brFiles.length){toast('Choose one or more clips or photos.');return;}
+    if(people==='Patient'&&!consent){if(!confirm('No authorization ticked. It will be saved as "Needs review" and not used until you confirm consent. Continue?'))return;}
+    var prog=document.getElementById('brProg'),bar=document.getElementById('brBar'),pct=document.getElementById('brPct');
+    var files=brFiles.slice(), done=[], k=0;
+    brBusy=true; btn.disabled=true; prog.classList.remove('hidden');
+    function finish(msg){brBusy=false;btn.disabled=false;btn.textContent='Upload to library';if(msg)toast(msg);}
+    function next(){
+      if(k>=files.length){
+        finish('Added '+done.length+' to the library: '+done.join(', '));
+        brFiles=[]; LIB=null; loadLibrary(); return;
+      }
+      var f=files[k]; btn.textContent='Uploading '+(k+1)+' of '+files.length+'…'; bar.style.width='0'; pct.textContent=f.name;
+      api().withSuccessHandler(function(s){
+        var xhr=new XMLHttpRequest();
+        xhr.open('PUT',s.uploadUrl,true);
+        xhr.setRequestHeader('Content-Type',f.type);
+        xhr.upload.onprogress=function(e){if(e.lengthComputable){var p=Math.round(e.loaded/e.total*100);bar.style.width=p+'%';pct.textContent=f.name+' · '+p+'% · keep this screen open';}};
+        xhr.onerror=function(){finish('Upload of '+f.name+' was blocked or dropped. Try again on Wi-Fi.');};
+        xhr.onload=function(){
+          if(xhr.status!==200&&xhr.status!==201){finish('Upload of '+f.name+' failed ('+xhr.status+').');return;}
+          var id=null;try{id=JSON.parse(xhr.responseText).id;}catch(err){}
+          if(!id){finish('Drive did not return '+f.name+'. Try again.');return;}
+          api().withSuccessHandler(function(r){done.push(r.clipId);k++;next();})
+            .withFailureHandler(function(err){finish(err.message);})
+            .finishBrollUpload({fileId:id,service:service,keywords:kw,people:people,consent:consent});
+        };
+        xhr.send(f);
+      }).withFailureHandler(function(err){finish(err.message);})
+        .startBrollUpload({name:f.name,mimeType:f.type,size:f.size,service:service,origin:window.location.origin});
+    }
+    next();
+  }
+
+  document.getElementById('view-library').addEventListener('click',function(e){
+    if(e.target.id==='brBtn'){ brollUpload(e.target); return; }
+    var f=e.target.closest('.filter');
+    if(f){ if(f.id==='reviewToggle') libOnlyReview=!libOnlyReview; else libService=f.dataset.code; renderLibrary(); return; }
+    if(e.target.id==='bulkBtn'){
+      if(!confirm('Mark these as usable with no people shown? You can still change any one later.')) return;
+      var bb=e.target; bb.disabled=true; bb.textContent='Saving…';
+      api().withSuccessHandler(function(r){toast('Marked '+r.count+' items ready to use.');loadLibrary();})
+        .withFailureHandler(function(err){bb.disabled=false;toast(err.message);}).bulkApproveDevices(libService);
+      return;
+    }
+    if(e.target.id==='syncBtn'){
+      var b=e.target; b.disabled=true; b.textContent='Syncing…';
+      api().withSuccessHandler(function(r){
+        toast(r.total?('Added '+r.total+' new items.'):'No new files found.'+(r.foldersFound.length<CLINIC.codes.length?' Folders found: '+r.foldersFound.join(', '):''));
+        loadLibrary();
+      }).withFailureHandler(function(err){b.disabled=false;b.textContent='Sync';toast(err.message);}).syncLibrary();
+      return;
+    }
+    var s=e.target.closest('.save'); if(!s) return;
+    var i=+s.dataset.i, r=LIB[i];
+    var p={row:r.row,clipId:r.clipId,active:document.getElementById('ac'+i).value,people:document.getElementById('pe'+i).value,
+      consent:document.getElementById('co'+i).value,description:document.getElementById('de'+i).value.trim()};
+    if(p.active==='Yes'&&!p.people){toast('Set "People shown" first.');return;}
+    s.disabled=true; s.textContent='Saving…';
+    api().withSuccessHandler(function(){
+      r.active=p.active;r.people=p.people;r.consent=p.consent;r.description=p.description;
+      toast('Saved '+r.clipId+'.'); renderLibrary();
+    }).withFailureHandler(function(err){s.disabled=false;s.textContent='Save';toast(err.message);}).updateLibraryItem(p);
+  });
+
+  document.getElementById('postWhen').addEventListener('change',function(){
+    document.getElementById('postAt').classList.toggle('hidden',this.value!=='time');
+  });
+
+  document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.view);});});
+  document.getElementById('refresh').addEventListener('click',load);
+
+  function showLogin(){
+    document.getElementById('login').classList.remove('hidden');
+    google.script.run.withSuccessHandler(function(s){
+      var setup=s&&s.needsSetup;
+      document.getElementById('loginTitle').textContent=setup?'Create your login':'Sign in';
+      document.getElementById('loginSub').textContent=setup?'First-time setup. Use the owner email and let your phone suggest a strong password (12+ characters).':'Use your Tidecast Media login. First time? Your password is set when you sign in.';
+      document.getElementById('loginPass').setAttribute('autocomplete',setup?'new-password':'current-password');
+      document.getElementById('loginBtn').textContent=setup?'Create login':'Sign in';
+    }).authStatus();
+  }
+  document.getElementById('loginForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var btn=document.getElementById('loginBtn'), err=document.getElementById('loginErr');
+    btn.disabled=true; err.textContent='';
+    google.script.run.withSuccessHandler(function(r){
+      saveToken(r.token); btn.disabled=false;
+      document.getElementById('loginPass').value='';
+      document.getElementById('login').classList.add('hidden');
+      load();
+    }).withFailureHandler(function(x){btn.disabled=false; err.textContent=x.message;})
+      .login(document.getElementById('loginEmail').value, document.getElementById('loginPass').value);
+  });
+  document.getElementById('signout').addEventListener('click',function(){
+    var t=TOKEN; saveToken(null); DATA=null; LIB=null;
+    if(t) google.script.run.logout(t);
+    showLogin();
+  });
+
+  greet(); renderUploads();
+  if(TOKEN) load(); else showLogin();
+</script>
+</body>
+</html>
