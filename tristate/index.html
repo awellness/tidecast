@@ -39,7 +39,7 @@
   [data-theme=dark] .filter[aria-pressed=true]{color:var(--bg)}
   [data-theme=dark] .toast{color:var(--bg)}
   [data-theme=dark] .slide{border-color:var(--line)}
-  [data-theme=dark] .slide input{background:var(--wash);color:var(--ink);border-color:var(--field)}
+  [data-theme=dark] .slide input,[data-theme=dark] .slide textarea{background:var(--wash);color:var(--ink);border-color:var(--field)}
   [data-theme=dark] .slide .cnt{color:var(--muted)}
   [data-theme=dark] .thumb,[data-theme=dark] .lib .media{background:#22313A;color:var(--muted)}
   [data-theme=dark] .title .tc{background:linear-gradient(90deg,#5FD39C,#4FB8C6);-webkit-background-clip:text;background-clip:text}
@@ -92,7 +92,8 @@
   .empty strong{display:block;color:var(--ink);font-size:17px;margin-bottom:6px}
   .video-wrap{display:flex;gap:14px}
   .slide{border:1px solid #E3E8EE;border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-  .slide input{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px 10px;border:1px solid #D5DCE3;border-radius:8px}
+  .slide input,.slide textarea{width:100%;box-sizing:border-box;font:inherit;font-size:15px;padding:8px 10px;border:1px solid #D5DCE3;border-radius:8px}
+  .slide textarea{min-height:150px;resize:vertical;line-height:1.4}
   .slide .lab{text-transform:uppercase;font-size:13px;letter-spacing:.04em}
   .slide .cnt{font-size:12px;color:#6B7785}
   .slide .cnt.over{color:#B42318;font-weight:600}
@@ -511,33 +512,53 @@
 
   /* ---------- Approve ---------- */
   var SLIM={lab:18,head:70,sub:90};
+  var SLIM_CAR={lab:18,head:70,sub:340};   /* Carousel v2: slide 1 = cover hook, slides 2+ = title + body */
   function parseSlides(t){
     return String(t||'').split('\n').map(function(l){return l.trim();}).filter(String).map(function(l){
       var p=l.split('|').map(function(x){return x.trim();});while(p.length<3)p.push('');return [p[0],p[1],p.slice(2).join(' ')];
     });
   }
-  function slideField(i,k,key,val,ph){
-    var max=SLIM[key],n=val.length;
-    return '<input class="'+key+'" data-key="'+key+'" maxlength="'+(max+40)+'" value="'+esc(val)+'" placeholder="'+ph+'" aria-label="Slide '+(k+1)+' '+ph+'">'
+  function slideField(i,k,key,val,ph,lim,area){
+    var max=(lim||SLIM)[key],n=val.length;
+    if(area) return '<textarea class="'+key+'" data-key="'+key+'" data-max="'+max+'" rows="7" placeholder="'+ph+'" aria-label="Slide '+(k+1)+' '+ph+'">'+esc(val)+'</textarea>'
+      +'<span class="cnt'+(n>max?' over':'')+'">'+n+' / '+max+'</span>';
+    return '<input class="'+key+'" data-key="'+key+'" data-max="'+max+'" maxlength="'+(max+40)+'" value="'+esc(val)+'" placeholder="'+ph+'" aria-label="Slide '+(k+1)+' '+ph+'">'
       +'<span class="cnt'+(n>max?' over':'')+'">'+n+' / '+max+'</span>';
   }
-  function slideHtml(i,k,x){
+  function slideHtml(i,k,x,car){
+    if(car){
+      var body=String(x[2]||'').replace(/\\n/g,'\n');
+      if(k===0) return '<div class="slide" data-car="1"><span class="meta"><strong>Slide 1 · Cover</strong> (big hook over an AI image)</span>'
+        +'<input type="hidden" data-key="lab" value="COVER">'+slideField(i,k,'head',x[1],'Cover hook',SLIM_CAR)+'<input type="hidden" data-key="sub" value=""></div>';
+      return '<div class="slide" data-car="1"><span class="meta"><strong>Slide '+(k+1)+'</strong></span>'
+        +'<input type="hidden" data-key="lab" value="">'+slideField(i,k,'head',x[1],'Title (for example: #1: Exosomes)',SLIM_CAR)
+        +slideField(i,k,'sub',body,'Body text. Use new lines and • for bullets.',SLIM_CAR,true)+'</div>';
+    }
     return '<div class="slide"><span class="meta"><strong>Slide '+(k+1)+'</strong></span>'
       +slideField(i,k,'lab',x[0],'Label')+slideField(i,k,'head',x[1],'Headline')+slideField(i,k,'sub',x[2],'Subheadline (optional)')+'</div>';
   }
   function readSlides(i){
     var box=document.getElementById('sl'+i),out=[],err='';
-    box.querySelectorAll('.slide').forEach(function(sd,k){
-      var v={};sd.querySelectorAll('input').forEach(function(inp){v[inp.dataset.key]=inp.value.replace(/\|/g,'/').replace(/\s+/g,' ').trim();});
-      if(!v.head&&!err) err='Slide '+(k+1)+' needs a headline.';
-      ['lab','head','sub'].forEach(function(key){if(v[key].length>SLIM[key]&&!err) err='Slide '+(k+1)+' is too long. Shorten the red fields.';});
-      out.push(v.lab.toUpperCase()+' | '+v.head+' | '+v.sub);
+    var slides=box.querySelectorAll('.slide'),total=slides.length;
+    slides.forEach(function(sd,k){
+      var car=sd.dataset.car==='1',lim=car?SLIM_CAR:SLIM,v={};
+      sd.querySelectorAll('input,textarea').forEach(function(inp){
+        var t=inp.value.replace(/\|/g,'/');
+        v[inp.dataset.key]=inp.tagName==='TEXTAREA'
+          ? t.replace(/\r?\n/g,'\n').split('\n').map(function(x){return x.replace(/\s+/g,' ').trim();}).join('\\n').replace(/(\\n){3,}/g,'\\n\\n').replace(/^(\\n)+|(\\n)+$/g,'')
+          : t.replace(/\s+/g,' ').trim();
+      });
+      if(!v.head&&!err) err='Slide '+(k+1)+(car&&k===0?' needs a cover hook.':' needs a headline.');
+      if(car&&k>0&&!v.sub&&!err) err='Slide '+(k+1)+' needs body text.';
+      ['lab','head','sub'].forEach(function(key){if(String(v[key]||'').replace(/\\n/g,' ').length>lim[key]&&!err) err='Slide '+(k+1)+' is too long. Shorten the red fields.';});
+      var lab=car?(k===0?'COVER':(k+1)+'/'+total):String(v.lab||'').toUpperCase();
+      out.push(lab+' | '+v.head+' | '+(v.sub||''));
     });
     return {text:out.join('\n'),count:out.length,err:err};
   }
   document.getElementById('view-approve').addEventListener('input',function(e){
-    var inp=e.target; if(!inp.dataset||!inp.dataset.key) return;
-    var c=inp.nextElementSibling,max=SLIM[inp.dataset.key],n=inp.value.length;
+    var inp=e.target; if(!inp.dataset||!inp.dataset.key||!inp.dataset.max) return;
+    var c=inp.nextElementSibling,max=+inp.dataset.max,n=inp.value.length;
     c.textContent=n+' / '+max; c.classList.toggle('over',n>max);
   });
 
@@ -573,10 +594,10 @@
             +'</div>';
         }
       } else if(d.isImage){
-        var sl=parseSlides(d.slides);
-        if(!sl.length) sl=[['','','']];
-        body='<div class="field"><span class="label">'+(/carousel/i.test(d.format)?'Slides (3 to 5)':(/holiday/i.test(d.format)?'Holiday greeting (LABEL | headline | subline)':'Image text'))+'</span><div id="sl'+i+'">'
-          +sl.map(function(x,k){return slideHtml(i,k,x);}).join('')+'</div>'
+        var sl=parseSlides(d.slides), carV2=/carousel/i.test(d.format);
+        if(!sl.length) sl=carV2?[['COVER','',''],['','',''],['','',''],['','','']]:[['','','']];
+        body='<div class="field"><span class="label">'+(carV2?'Slides (cover + 3 to 5 slides)':(/holiday/i.test(d.format)?'Holiday greeting (LABEL | headline | subline)':'Image text'))+'</span><div id="sl'+i+'">'
+          +sl.map(function(x,k){return slideHtml(i,k,x,carV2);}).join('')+'</div>'
           +(/carousel/i.test(d.format)?'<div class="btns" style="margin-top:0"><button class="btn" type="button" data-act="addslide" data-i="'+i+'">Add slide</button><button class="btn" type="button" data-act="delslide" data-i="'+i+'">Remove last slide</button></div>':'')
           +'</div>';
       } else {
@@ -607,8 +628,8 @@
     var i=+b.dataset.i, d=DATA.drafts[i];
     if(b.dataset.act==='addslide'||b.dataset.act==='delslide'){
       var box=document.getElementById('sl'+i),cnt=box.querySelectorAll('.slide').length;
-      if(b.dataset.act==='addslide'){ if(cnt>=5){toast('5 slides at most.');return;} box.insertAdjacentHTML('beforeend',slideHtml(i,cnt,['','',''])); }
-      else { if(cnt<=3){toast('A carousel needs at least 3 slides.');return;} box.lastElementChild.remove(); }
+      if(b.dataset.act==='addslide'){ if(cnt>=6){toast('6 slides at most (cover + 5).');return;} box.insertAdjacentHTML('beforeend',slideHtml(i,cnt,['','',''],true)); }
+      else { if(cnt<=4){toast('A carousel needs a cover and at least 3 slides.');return;} box.lastElementChild.remove(); }
       return;
     }
     var card=b.closest('article'); card.querySelectorAll('button').forEach(function(x){x.disabled=true;});
@@ -621,7 +642,7 @@
         .approveDraft({row:d.row,id:d.id,captionRow:d.captionRow,captionId:d.captionId,cuts:cuts,caption:capF?capF.value.trim():d.caption});
     } else if(b.dataset.act==='approve'&&d.isImage){
       var r=readSlides(i), car=/carousel/i.test(d.format);
-      if(!r.err&&car&&(r.count<3||r.count>5)) r.err='A carousel needs 3 to 5 slides.';
+      if(!r.err&&car&&(r.count<4||r.count>6)) r.err='A carousel needs a cover and 3 to 5 slides.';
       if(r.err){toast(r.err);undo();return;}
       var capI=document.getElementById('cap'+i);
       api().withSuccessHandler(function(res){toast(res&&res.produced?'Approved. Your image is being made now.':'Approved. Images are made at 10 AM.');load();})
